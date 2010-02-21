@@ -4,6 +4,9 @@
 
 module Production
 
+  attr_accessor :interval
+  attr_accessor :data
+
 #  # Define this method if you want the production name to be different from the default, directory name.
 #  def name
 #    return .
@@ -17,10 +20,14 @@ module Production
 #    return "0.5.5"
 #  end
 #
-#  # Hook #1.  Called when the production is newly created, before any loading has been done.
-#  # This is a good place to require needed files and instantiate objects in the business layer.
-#  def production_opening
-#  end
+  # Hook #1.  Called when the production is newly created, before any loading has been done.
+  # This is a good place to require needed files and instantiate objects in the business layer.
+  def production_opening
+    @interval = 15 * 60
+    $: << File.expand_path(File.dirname(__FILE__) + "/lib")
+    require 'store'
+    @data = Store.new("~/Documents/tiker.txt")
+  end
 #
 #  # Hook #2.  Called after internal gems have been loaded and stages have been instantiated, yet before
 #  # any scenes have been opened.
@@ -34,9 +41,9 @@ module Production
 #  # The system will call this methods when it wishes to close the production, perhaps when the user quits the
 #  # application.  By default the production will always return true. You may override this behavior by re-implenting
 #  # the methods here.
- def allow_close?
-   return false
- end
+# def allow_close?
+#   return false
+# end
 #
 #  # Called when the production is about to be closed.
 #  def production_closing

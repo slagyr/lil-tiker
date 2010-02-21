@@ -4,15 +4,30 @@
 # For more information see: http://limelightwiki.8thlight.com/index.php/A_Cook%27s_Tour_of_Limelight#Styling_with_styles.rb
 # For a complete listing of style attributes see: http://limelightwiki.8thlight.com/index.php/Style_Attributes
 
-default_scene {
+query {
   background_color :grey
+  secondary_background_color :black
+  gradient :on
+  gradient_penetration 50
+  gradient_angle 90
   horizontal_alignment :center
   vertical_alignment :center
   width "100%"
   height "100%"
 }
 
-root {
-  text_color :white
-  font_size 18
+activity_label {
+  horizontal_alignment :center
+  text_color "#e8a94e"
+  font_size 72
+  width "100%"
+  bottom_margin 30
+}
+
+activity_input {
+  width 300
+}
+
+submit_task {
+  width 150
 }

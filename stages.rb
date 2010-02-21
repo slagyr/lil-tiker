@@ -1,18 +1,30 @@
 # This file (stages.rb) is used to define the stages within your production.
 #
 # Below is an example statge configuration.
-#
-#  stage "center_stage" do
-#    default_scene "main"
-#    title "Limelight Center Stage"
-#    location [0, 0]
-#    size [300, 800]
-#  end
 
-stage "default" do
-  default_scene "default_scene"
-  title "Limelight"
-  location [200, 25]
-  size [100, 100]
-  vital true
+stage "query" do
+  default_scene "query"
+  title "Tiker Query"
+  location :center, :center
+  size [600, 600]
+  kiosk true
+  framed false
 end
+
+stage "status" do
+  default_scene "status"
+  title "Tiker Status"
+  location :right, :top
+  size [150, 60]
+  framed false
+end
+
+stage "devtool" do
+  default_scene "devtool"
+  title "Dev Tool"
+  location [50, 25]
+  size [100, 100]
+  background_color "transparent"
+  framed false
+end
+

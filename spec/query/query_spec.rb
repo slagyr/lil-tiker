@@ -1,15 +1,14 @@
 require File.expand_path(File.dirname(__FILE__) + "/../spec_helper")
+require File.expand_path(File.dirname(__FILE__) + "/../mock_store")
 
-describe "Default Scene" do
+describe "Query Scene" do
 
-  uses_limelight :scene => "default_scene", :hidden => false
+  uses_limelight :scene => "query", :hidden => false
   
   before(:each) do
-    scene.interval = 0.1
-  end
-
-  after(:each) do
-    File.delete("/tmp/tiker.txt") if File.exists?("/tmp/tiker.txt")
+    production.interval = 0.1
+    @data = MockStore.new
+    production.data = @data
   end
   
   it "asks what you are doing?" do
@@ -22,7 +21,7 @@ describe "Default Scene" do
   it "has a button to 'submit' what you were doing" do
     button = scene.find("save_task")
     
-    button.text.should == "Task"
+    button.text.should == "Now Go Away!"
   end
   
   it "has a button which is a button" do
@@ -41,29 +40,16 @@ describe "Default Scene" do
     scene.find("activity_input").text = "something else"
 
     scene.find("save_task").button_pressed
-    
-    content = IO.read('/tmp/tiker.txt')
-    content.include?("something else").should == true
+
+    @data.entries.include?("something else").should == true
   end
   
   it "should write something to a tmp file when you click the button" do
     scene.activity_input.text = "something"
 
     scene.find("save_task").button_pressed
-    
-    content = IO.read('/tmp/tiker.txt')
-    content.include?("something\n").should == true
-  end
-  
-  it "should include a timestamp with the message in the file" do
-    Time.stub!(:now).and_return("12:00")
-    
-    scene.find("activity_input").text = "something"
 
-    scene.find("save_task").button_pressed
-    
-    content = IO.read('/tmp/tiker.txt')
-    content.include?("12:00").should == true
+    @data.entries.include?("something").should == true
   end
   
   it "should append new tasks" do
@@ -72,8 +58,7 @@ describe "Default Scene" do
     scene.find("activity_input").text = "task two"
     scene.find("save_task").button_pressed
     
-    content = IO.read('/tmp/tiker.txt')
-    content.include?("task one").should == true
+    @data.entries.include?("task one").should == true
   end
   
   it "clears the text box on submit" do
@@ -81,14 +66,21 @@ describe "Default Scene" do
     scene.find("save_task").button_pressed
     scene.find("activity_input").text.should == ""
   end
-  
-  it "go away for a while on submit" do
-    scene.find("activity_input").text = "task one"
+
+  it "should do nothing when you don't provide an activity" do
+    scene.find("activity_input").text = ""
     scene.find("save_task").button_pressed
-    scene.stage.visible?.should == false
-    
-    sleep(0.2)
-    scene.stage.visible?.should == true
+
+    @data.entries.empty?.should == true
   end
+  
+#  it "go away for a while on submit" do
+#    scene.find("activity_input").text = "task one"
+#    scene.find("save_task").button_pressed
+#    scene.stage.visible?.should == false
+#
+#    sleep(0.2)
+#    scene.stage.visible?.should == true
+#  end
   
 end
